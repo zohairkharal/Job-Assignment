@@ -43,6 +43,7 @@ public class Card : MonoBehaviour
     {
         if (isFlipped || isTurning || !GameManager.Instance.CanSelectCard()) return;
         FlipCard();
+        AudioManager.Instance.PlaySoundFX(SoundFX.Flip);
         _ = GameManager.Instance.OnCardSelectedAsync(this);
     }
 

@@ -1,26 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using System.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public static System.Action<int> UpdateScore, UpdateMoves;
+
 
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private GameObject cardContainer;
     [SerializeField] private Sprite cardBack;
     [SerializeField] private Sprite[] cardSprites;
-    [SerializeField] private TMP_Text timeLabel;
-    [SerializeField] private TMP_Text scoreLabel;
-    [SerializeField] private TMP_Text movesLabel;
+
     [SerializeField] private MenuManager uiHandler;
+
+    public Sprite GetSprite(int id) => cardSprites[id];
+    public Sprite GetCardBackSprite() => cardBack;
 
     private Card[] cards;
     private int selectedCardCount;
     private int matchedPairs;
-    private float gameTime;
     private bool isGameRunning;
 
     private int previousCardSpriteID;
@@ -49,12 +50,11 @@ public class GameManager : MonoBehaviour
         previousCardSpriteID = -1;
         previousCardID = -1;
         currentCombo = 0;
-        scoreLabel.text = "Score: " + 0;
+
 
         SetupCards();
         PeekCardsAtStart();
         StartCoroutine(HideAllCards());
-        StartTimer();
     }
 
     private void SetupCards()
@@ -97,34 +97,22 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         foreach (Card card in cards)
         {
-            //card.ResetCard();
             card.FlipCard();
         }
     }
 
-    public Sprite GetSprite(int id) => cardSprites[id];
-    public Sprite GetCardBackSprite() => cardBack;
 
-    private void StartTimer()
-    {
-        StartCoroutine(GameTimer());
-    }
 
-    private IEnumerator GameTimer()
-    {
-        gameTime = 0f;
-        while (isGameRunning)
-        {
-            gameTime += Time.deltaTime;
-            timeLabel.text = "Time: " + Mathf.RoundToInt(gameTime);
-            yield return null;
-        }
-    }
+
     private async Task CallWithDelayAsync(float delayInSeconds)
     {
         await Task.Delay((int)(delayInSeconds * 1000));
     }
 
+    public bool IsGameRunning()
+    {
+        return isGameRunning;
+    }
     public async Task OnCardSelectedAsync(Card card)
     {
         await CallWithDelayAsync(1f);
@@ -141,34 +129,34 @@ public class GameManager : MonoBehaviour
                 cards[previousCardID].SetInactive();
                 card.SetInactive();
                 matchedPairs++;
-                UpdateScore();
-                if (matchedPairs == cards.Length / 2) EndGame();
+                UpdateScore?.Invoke(++currentCombo);
+                if (matchedPairs == cards.Length / 2) StartCoroutine(EndGame());
+
             }
             else
             {
                 cards[previousCardID].FlipCard();
                 card.FlipCard();
                 currentCombo = 0;
+                AudioManager.Instance.PlaySoundFX(SoundFX.Unmatch);
             }
-            UpdateMoveCount();
+            UpdateMoves?.Invoke(++moveCount);
             selectedCardCount = 0;
         }
     }
 
-    private void UpdateScore()
-    {
-        currentCombo++;
-        int points = currentCombo > 1 ? currentCombo * 2 : 1;
-        scoreLabel.text = "Score: " + points;
-    }
-    private void UpdateMoveCount()
-    {
-        moveCount++;
-        scoreLabel.text = "Total Moves: " + moveCount;
-    }
-    private void EndGame()
+    //private void UpdateScore()
+    //{
+    //    currentCombo++;
+    //    AudioManager.Instance.PlayComboSound(currentCombo);
+    //    int points = currentCombo > 1 ? currentCombo * 2 : 1;
+    //    scoreLabel.text = "Score: " + points;
+    //}
+
+    private IEnumerator EndGame()
     {
         isGameRunning = false;
+        yield return new WaitForSeconds(3f);
         uiHandler.SwitchScreens(UIScreen.Menu);
     }
 

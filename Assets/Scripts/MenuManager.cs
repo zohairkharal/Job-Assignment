@@ -13,12 +13,14 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Toggle _2x2, _2x3, _4x4, _4x5, custom;
     [SerializeField] private TMP_InputField rowsInput, colsInput;
     [SerializeField] private TMP_Text selectGridText;
+    [SerializeField] private TMP_Text timerLabel, movesLabel, scoreLabel;
 
     [Header("UI Panels")]
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject gameplayPanel;
 
     private int rows = 0, cols = 0;
+    private int prevGameScore, prevGameMoves, prevGameTimer;
 
     private void Awake()
     {
@@ -27,10 +29,10 @@ public class MenuManager : MonoBehaviour
 
     private void InitializeListeners()
     {
-        _2x2.onValueChanged.AddListener((isOn) => { if (isOn) SetGridSize(2, 2); });
-        _2x3.onValueChanged.AddListener((isOn) => { if (isOn) SetGridSize(2, 3); });
-        _4x4.onValueChanged.AddListener((isOn) => { if (isOn) SetGridSize(4, 4); });
-        _4x5.onValueChanged.AddListener((isOn) => { if (isOn) SetGridSize(4, 5); });
+        _2x2.onValueChanged.AddListener((isOn) => { if (isOn) SetGridSize(2, 2); AudioManager.Instance.PlaySoundFX(SoundFX.Click); });
+        _2x3.onValueChanged.AddListener((isOn) => { if (isOn) SetGridSize(2, 3); AudioManager.Instance.PlaySoundFX(SoundFX.Click); });
+        _4x4.onValueChanged.AddListener((isOn) => { if (isOn) SetGridSize(4, 4); AudioManager.Instance.PlaySoundFX(SoundFX.Click); });
+        _4x5.onValueChanged.AddListener((isOn) => { if (isOn) SetGridSize(4, 5); AudioManager.Instance.PlaySoundFX(SoundFX.Click); });
         custom.onValueChanged.AddListener(ActivateInput);
         rowsInput.onValueChanged.AddListener(OnRowValueChanged);
         colsInput.onValueChanged.AddListener(OnColValueChanged);
@@ -40,7 +42,23 @@ public class MenuManager : MonoBehaviour
     {
         _2x2.onValueChanged.Invoke(true);
     }
-
+    private void OnEnable()
+    {
+        GetPreviousGameData();
+        SetLabels();
+    }
+    void GetPreviousGameData()
+    {
+        prevGameScore = SaveLoadManager.Instance.LoadScore(PersistentKeys.Score);
+        prevGameTimer = SaveLoadManager.Instance.LoadScore(PersistentKeys.Timer);
+        prevGameMoves = SaveLoadManager.Instance.LoadScore(PersistentKeys.Moves);
+    }
+    void SetLabels()
+    {
+        timerLabel.text = $"Last Game Timer: {prevGameTimer}";
+        scoreLabel.text = $"Last Game Scores: {prevGameScore}";
+        movesLabel.text = $"Last Game Moves: {prevGameMoves}";
+    }
     private void SetGridSize(int row, int col)
     {
         rows = row;
@@ -53,6 +71,8 @@ public class MenuManager : MonoBehaviour
         rowsInput.interactable = isOn;
         colsInput.interactable = isOn;
         if (!isOn) ResetInputs();
+
+        AudioManager.Instance.PlaySoundFX(SoundFX.Click);
     }
 
     private void ResetInputs()
@@ -68,6 +88,7 @@ public class MenuManager : MonoBehaviour
             row = Mathf.Clamp(row % 2 == 0 ? row : row + 1, 0, 10);
             rowsInput.text = row.ToString();
             SetGridSize(row, cols);
+            AudioManager.Instance.PlaySoundFX(SoundFX.Write);
         }
     }
 
@@ -78,6 +99,7 @@ public class MenuManager : MonoBehaviour
             col = Mathf.Clamp(col % 2 == 0 ? col : col + 1, 0, 10);
             colsInput.text = col.ToString();
             SetGridSize(rows, col);
+            AudioManager.Instance.PlaySoundFX(SoundFX.Write);
         }
     }
 
@@ -102,5 +124,7 @@ public class MenuManager : MonoBehaviour
     {
         SwitchScreens(UIScreen.Gameplay);
         GameManager.Instance.StartGame();
+        AudioManager.Instance.PlaySoundFX(SoundFX.Click);
+
     }
 }
