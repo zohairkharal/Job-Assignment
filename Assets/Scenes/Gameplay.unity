@@ -472,7 +472,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Last Game Scores
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ae8c1d2c316f2448b86c02c8425dc60c, type: 2}
   m_sharedMaterial: {fileID: -2048453359697558646, guid: ae8c1d2c316f2448b86c02c8425dc60c, type: 2}
@@ -606,7 +606,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Last Game Moves: '
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ae8c1d2c316f2448b86c02c8425dc60c, type: 2}
   m_sharedMaterial: {fileID: -2048453359697558646, guid: ae8c1d2c316f2448b86c02c8425dc60c, type: 2}
@@ -1980,7 +1980,6 @@ MonoBehaviour:
   flip: {fileID: 8300000, guid: e67275979149c444fbc87e34eddd2a39, type: 3}
   match: {fileID: 8300000, guid: 67af103d62f8948718bd93f6f35edcfc, type: 3}
   unmatch: {fileID: 8300000, guid: 0b424ad54afc04f3a820a601c5f99bc8, type: 3}
-  gameover: {fileID: 0}
   fail: {fileID: 8300000, guid: 4b3cdc792ded54532a2d86be28d1bf04, type: 3}
   win: {fileID: 8300000, guid: 093efa9468f4341608a2f75d71f2ea95, type: 3}
   bgMusic: {fileID: 8300000, guid: 197cbdac8501f4e319385f47eadc8153, type: 3}
@@ -5225,7 +5224,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Last Game Timer:'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ae8c1d2c316f2448b86c02c8425dc60c, type: 2}
   m_sharedMaterial: {fileID: -2048453359697558646, guid: ae8c1d2c316f2448b86c02c8425dc60c, type: 2}

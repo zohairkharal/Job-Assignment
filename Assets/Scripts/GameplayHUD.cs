@@ -41,9 +41,7 @@ public class GameplayHUD : MonoBehaviour
 
     private IEnumerator GameTimer()
     {
-        yield return new WaitUntil(() => GameManager.Instance.IsGameRunning() != false);//Don't start timer until game is not started
-
-        Debug.Log("Start Timer.");
+        yield return new WaitUntil(() => GameManager.Instance.IsGameRunning() != false);
 
         float gameTime = GameManager.Instance.GetGameTime();
         while (gameTime > 0 && GameManager.Instance.IsGameRunning())

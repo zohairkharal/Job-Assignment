@@ -8,7 +8,7 @@ public enum PersistentKeys
 }
 public class SaveLoadManager : MonoBehaviour
 {
-    public static SaveLoadManager Instance { get; private set; }  // Singleton pattern
+    public static SaveLoadManager Instance { get; private set; }
 
     private void Awake()
     {
