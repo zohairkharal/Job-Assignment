@@ -9,7 +9,6 @@ public enum SoundFX
     Flip,
     Match,
     Unmatch,
-    GameOver,
     Fail,
     Win
 
@@ -19,7 +18,7 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance { get; private set; }
 
     [SerializeField] private AudioSource music, sound;
-    [SerializeField] private AudioClip click, write, flip, match, unmatch, gameover, fail, win;
+    [SerializeField] private AudioClip click, write, flip, match, unmatch, fail, win;
     [SerializeField] private AudioClip bgMusic;
 
     private void Awake()
@@ -59,18 +58,23 @@ public class AudioManager : MonoBehaviour
             case SoundFX.Unmatch:
                 clip = unmatch;
                 break;
-            case SoundFX.GameOver:
-                clip = gameover;
-                break;
             case SoundFX.Fail:
                 clip = fail;
+                StartCoroutine(HandleBGMusinOnWinLose());
                 break;
             case SoundFX.Win:
                 clip = win;
+                StartCoroutine(HandleBGMusinOnWinLose());
                 break;
         }
         sound.pitch = 1;
         sound.PlayOneShot(clip);
+    }
+    IEnumerator HandleBGMusinOnWinLose()
+    {
+        music.mute = true;
+        yield return new WaitUntil(() => sound.isPlaying == false);
+        music.mute = false;
     }
     public void PlayComboSound(int combo)
     {
