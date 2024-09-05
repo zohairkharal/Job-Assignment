@@ -100,6 +100,8 @@ public class GameplayHUD : MonoBehaviour
         movesLabel.text = "Moves: 0";
         timeLabel.text = "";
 
+        score = 0; moves = 0; timer = 0;
+
         losePopup.SetActive(false);
         winPopup.SetActive(false);
         StartCoroutine(GameTimer());

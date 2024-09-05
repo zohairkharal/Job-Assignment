@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         previousCardSpriteID = -1;
         previousCardID = -1;
         currentCombo = 0;
+        moveCount = 0;
 
         ResetHUD?.Invoke();
         SetupCards();
